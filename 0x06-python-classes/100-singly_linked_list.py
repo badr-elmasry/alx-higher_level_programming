@@ -1,67 +1,78 @@
 #!/usr/bin/python3
+"""Module containing the Node and SinglyLinkedList class."""
+
+
 class Node:
+    """The node class designed for queue, singlylinked list, stack."""
+
     def __init__(self, data, next_node=None):
-        """Defines a node of a singly linked list"""
+        """Initialization of the node.
+        Args:
+            data (int): The integer value to be stored in the node.
+            next_node (:obj:'Node'): The next node.
+        """
         self.data = data
         self.next_node = next_node
 
     @property
     def data(self):
-        """data getter"""
+        """int: Integer value stored in the node."""
         return self.__data
 
     @data.setter
     def data(self, value):
-        """data setter"""
-        if type(value) != int:
+        if type(value) is not int:
             raise TypeError("data must be an integer")
+
         self.__data = value
 
     @property
     def next_node(self):
-        """next_node getter"""
+        """:obj:'Node': The next node."""
         return self.__next_node
 
     @next_node.setter
     def next_node(self, value):
-        """next_node setter"""
         if value is not None and type(value) is not Node:
             raise TypeError("next_node must be a Node object")
+
         self.__next_node = value
 
 
 class SinglyLinkedList:
+    """The singlylinked list class"""
+
     def __init__(self):
-        """Defines a singly linked list"""
+        """Initialization of the singly linked list."""
         self.__head = None
 
     def sorted_insert(self, value):
-        new = Node(value)
-        tmp = self.__head
-        add_start = False
-
-        if not self.__head:
-            self.__head = new
-            new.next_node = None
+        """Inserts a node in increasing order of the singly linked list.
+        Args:
+            value (int): The integer value of the node to be inserted into the
+                singly linked list.
+        """
+        curr_n = self.__head
+        if curr_n is None or value < curr_n.data:
+            self.__head = Node(value, curr_n)
         else:
-            if value < self.__head.data:
-                add_start = True
-            while tmp.next_node and value > tmp.next_node.data\
-                    and not add_start:
-                tmp = tmp.next_node
-            if not add_start:
-                    new.next_node = tmp.next_node
-                    tmp.next_node = new
-            else:
-                new.next_node = tmp
-                self.__head = new
-            new.data = value
+            while (curr_n.next_node is not None and
+                    value >= curr_n.next_node.data):
+                    curr_n = curr_n.next_node
+            curr_n.next_node = Node(value, curr_n.next_node)
 
     def __str__(self):
-        s = ""
-        current = self.__head
-
-        while current:
-            s += str(current.data) + '\n'
-            current = current.next_node
-        return s[: -1]
+        """Returns a string containing the integer values of each node on
+        separate lines
+        Returns:
+            str: The string of integers values
+        """
+        string = ""
+        if self.__head is not None:
+            string = str(self.__head.data)
+            curr_n = self.__head.next_node
+            while curr_n is not None:
+                string += "\n"
+                string += str(curr_n.data)
+                curr_n = curr_n.next_node
+        return string
